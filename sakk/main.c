@@ -26,11 +26,6 @@ int main(int argc, char *argv[]) {
 
     /* rajz keszitese */
     tabla_rajzol(renderer, tabla);
-    for(int i = 0; i < 8; i++){
-        for(int j = 0; j < 8; j++){
-            babu_rajzol(renderer, babuk, sakk_tabla[i][j], i*MERET, j*MERET);
-        }
-    }
     SDL_RenderPresent(renderer);
 
 
@@ -45,8 +40,6 @@ int main(int argc, char *argv[]) {
         SDL_Event event;
         SDL_WaitEvent(&event);
         bool rajzoltam = false;
-        //kirajzolja a tablat
-        tabla_rajzol(renderer, tabla);
         //kirajzolja a tablan levo sarga negyzeteket
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
