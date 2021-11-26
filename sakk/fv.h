@@ -30,5 +30,6 @@ SDL_Texture* kep_betolt(SDL_Renderer *renderer, char* path);
 void tabla_rajzol(SDL_Renderer *renderer, SDL_Texture *tabla);
 void sdl_init(int szeles, int magas, SDL_Window **pwindow, SDL_Renderer **prenderer);
 SDL_Texture* kep_betolt(SDL_Renderer *renderer, char* path);
+void menu_rajzol(SDL_Renderer *renderer, SDL_Texture *menu_hatter, SDL_Texture *also_gombok, SDL_Texture *mentes_gombok);
 
 #endif
