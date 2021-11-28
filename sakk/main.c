@@ -26,9 +26,12 @@ int main(int argc, char *argv[]) {
     bool sakk_hatter[8][8];
     bool sakk_utesek[8][8];
     ListaElem *lista=NULL;
+    ListaElem *lepeget=NULL;
+
     //sakk_tabla es sakk_hatter alaphelyzetere allitasa
     alap_tabla(sakk_tabla);
     alap_hatter(sakk_hatter);
+    lista = Beszur(lista, sakk_tabla);
 
     /* rajz keszitese */
     tabla_rajzol(renderer, tabla);
@@ -44,11 +47,16 @@ int main(int argc, char *argv[]) {
     bool rosal_v = false;
     bool quit = false;
     bool click = false;
+    bool babu_cserel = false;
+    bool szin_cserel = false;
+    Hely cserel;
     int elozox = 0;
     int elozoy = 0;
     bool kivalasztva = false;
     bool feher_lep=true;
-    bool vege=false;
+    bool feher_matt=false;
+    bool fekete_matt=false;
+    bool patt=false;
     while (!quit) {
         SDL_Event event;
         SDL_WaitEvent(&event);
@@ -77,159 +85,218 @@ int main(int argc, char *argv[]) {
                     click = true;
                     int t_y = event.button.y/100;
                     int t_x = event.button.x/100;
-                    if(t_y>7||t_x>7){
-                      if(event.button.y>769&&event.button.y<799){
-                        if(event.button.x>900){
-                        printf("Betoltes\n");
+                    if(babu_cserel){
+                      if(event.button.x>800&&event.button.y<33){
+                        if(szin_cserel){
+                            if(event.button.x>840) sakk_tabla[cserel.x][cserel.y]=VVezer;
+                            else if(event.button.x<880) sakk_tabla[cserel.x][cserel.y]=VFuto;
+                            else if(event.button.x<920) sakk_tabla[cserel.x][cserel.y]=VHuszar;
+                            else if(event.button.x<960) sakk_tabla[cserel.x][cserel.y]=VBastya;
+                            else if(event.button.x<1000) sakk_tabla[cserel.x][cserel.y]=VGyalog;
                         }
                         else{
-                          Mentes(lista);
+                            if(event.button.x>840) sakk_tabla[cserel.x][cserel.y]=SVezer;
+                            else if(event.button.x<880) sakk_tabla[cserel.x][cserel.y]=SFuto;
+                            else if(event.button.x<920) sakk_tabla[cserel.x][cserel.y]=SHuszar;
+                            else if(event.button.x<960) sakk_tabla[cserel.x][cserel.y]=SBastya;
+                            else if(event.button.x<1000) sakk_tabla[cserel.x][cserel.y]=SGyalog;
                         }
                       }
-                      else if(event.button.y>739){
-                        if(event.button.x<867){
-                          printf("uj\n");
-                        }
-                        else if(event.button.x<934){
-                          printf("bal_nyil\n");
-                        }
-                        else{
-                          printf("jobb_nyil\n");
-                        }
-                      }
+                      babu_cserel=false;
+                      lista=Beszur(lista, sakk_tabla);
                     }
                     else{
-                      if(feher_lep){
-                        //ha mar kattintottunk mar egy karakterre (kivalasztottuk) akkor igaz lesz
-                        if(kivalasztva){
-                          if((elozox == t_x) && (elozoy == t_y)){
-                            alap_hatter(sakk_hatter);
-                            kivalasztva=false;
-                          }
-                          else{
-                            if(sakk_hatter[t_x][t_y]==false){
-                                if (elpassant_v){
-                                  sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
-                                  sakk_tabla[elozox][elozoy]=Ures;
-                                  sakk_tabla[t_x][elozoy]=Ures;
-                                }
-                                else if(rosal_v||rosal_s){
-                                  printf("van\n");
-                                  if(t_x==0&&t_y==0){
-                                    sakk_tabla[0][0]=Ures;
-                                    sakk_tabla[1][0]=VKiraly;
-                                    sakk_tabla[2][0]=VBastya;
-                                    sakk_tabla[3][0]=Ures;
-                                  }
-                                  if(t_x==7&&t_y==0){
-                                    sakk_tabla[3][0]=Ures;
-                                    sakk_tabla[4][0]=VBastya;
-                                    sakk_tabla[5][0]=VKiraly;
-                                    sakk_tabla[6][0]=Ures;
-                                    sakk_tabla[7][0]=Ures;
-                                  }
-                                }
-                                else{
-                                  sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
-                                  sakk_tabla[elozox][elozoy]=Ures;
-                                }
-                                lista = Beszur(lista, sakk_tabla);
-                                feher_lep=false;
+                        if(t_y>7||t_x>7){
+                          if(event.button.y>769&&event.button.y<799){
+                            if(event.button.x>900){
+                              lista=Beolvas(lista);
                             }
-                            alap_hatter(sakk_hatter);
-                            kivalasztva=false;
+                            else{
+                              Mentes(lista);
+                            }
+                          }
+                          else if(event.button.y>739){
+                            if(event.button.x<867){
+                              free(lista);
+                              lista=NULL;
+                              alap_tabla(sakk_tabla);
+                              lista=Beszur(lista, sakk_tabla);
+                            }
+                            else if(event.button.x<934){
+                              if(lepeget->elo!=NULL){
+                                lepeget=Kovetkez(lepeget);
+                                Lista_masol(sakk_tabla,lepeget->adat);
+                              }
+                            }
+                            else{
+                              if(lepeget->kov!=NULL){
+                                lepeget=Elozo(lepeget);
+                                Lista_masol(sakk_tabla,lepeget->adat);
+                              }
+                            }
                           }
                         }
                         else{
-                          alap_hatter(sakk_hatter);
-                          if(!sakk_feher(sakk_tabla, sakk_hatter)){
-                            feher_huszar_lep(sakk_tabla, sakk_hatter, t_x, t_y);
-                            feher_kiralyno_lep(sakk_tabla, sakk_hatter, t_x, t_y);
-                            feher_futo_lep(sakk_tabla, sakk_hatter, t_x, t_y);
-                            feher_bastya_lep(sakk_tabla, sakk_hatter, t_x, t_y);
-                            rosal_v = feher_kiraly_lep(sakk_tabla, sakk_hatter, t_x, t_y, lista);
-                            elpassant_v = feher_paraszt_lep(sakk_tabla, sakk_hatter, t_x, t_y, lista);
-                          }
-                          else{
-                            if(matt_feher(sakk_tabla, lista)){
-                              vege=true;
-                            }
-                            else{
-                              feher_babu_jolepes(sakk_tabla, sakk_hatter, lista, t_x, t_y);
-                            }
-                          }
-                          kivalasztva=true;
-                        }
-                      }
-                      else{
-                        //ha mar kattintottunk mar egy karakterre (kivalasztottuk) akkor igaz lesz
-                        if(kivalasztva){
-                          if((elozox == t_x) && (elozoy == t_y)){
-                            alap_hatter(sakk_hatter);
-                            kivalasztva=false;
-                          }
-                          else{
-                            if(sakk_hatter[t_x][t_y]==false){
-                                if (elpassant_s){
-                                  sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
-                                  sakk_tabla[elozox][elozoy]=Ures;
-                                  sakk_tabla[t_x][elozoy]=Ures;
-                                }
-                                else if(rosal_s){
-                                  if(t_x==0&&t_y==7){
-                                    sakk_tabla[0][7]=Ures;
-                                    sakk_tabla[1][7]=SKiraly;
-                                    sakk_tabla[2][7]=SBastya;
-                                    sakk_tabla[3][7]=Ures;
-                                  }
-                                  if(t_x==7&&t_y==7){
-                                    sakk_tabla[3][7]=Ures;
-                                    sakk_tabla[4][7]=SBastya;
-                                    sakk_tabla[5][7]=SKiraly;
-                                    sakk_tabla[6][7]=Ures;
-                                    sakk_tabla[7][7]=Ures;
-                                  }
-                                }
-                                else{
-                                  sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
-                                  sakk_tabla[elozox][elozoy]=Ures;
-                                }
-                                lista = Beszur(lista, sakk_tabla);
-                                feher_lep=true;
-                            }
-                            alap_hatter(sakk_hatter);
-                            kivalasztva=false;
-                          }
-                        }
-                        else{
-                          alap_hatter(sakk_hatter);
-                          if(!sakk_feher(sakk_tabla, sakk_hatter)){
-                            fekete_huszar_lep(sakk_tabla, sakk_hatter, t_x, t_y);
-                            fekete_kiralyno_lep(sakk_tabla, sakk_hatter, t_x, t_y);
-                            fekete_futo_lep(sakk_tabla, sakk_hatter, t_x, t_y);
-                            fekete_bastya_lep(sakk_tabla, sakk_hatter, t_x, t_y);
-                            rosal_s = fekete_kiraly_lep(sakk_tabla, sakk_hatter, t_x, t_y, lista);
-                            elpassant_s = fekete_paraszt_lep(sakk_tabla, sakk_hatter, t_x, t_y, lista);
-                          }
-                          else{
-                            if(matt_fekete(sakk_tabla, lista)){
-                              vege=true;
-                            }
-                            else{
-                              fekete_babu_jolepes(sakk_tabla, sakk_hatter, lista, t_x, t_y);
-                            }
-                          }
-                          kivalasztva=true;
-                        }
-                      }
+                          if(feher_lep){
+                            Lista_masol(sakk_tabla, lista->adat);
+                            //ha mar kattintottunk mar egy karakterre (kivalasztottuk) akkor igaz lesz
+                            if(kivalasztva){
+                              if((elozox == t_x) && (elozoy == t_y)){
+                                alap_hatter(sakk_hatter);
+                                kivalasztva=false;
+                              }
+                              else{
+                                if(sakk_hatter[t_x][t_y]==false){
+                                    if(elpassant_v){
+                                      sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
+                                      sakk_tabla[elozox][elozoy]=Ures;
+                                      sakk_tabla[t_x][elozoy]=Ures;
+                                    }
+                                    else if(rosal_v){
+                                      if(t_x==0&&t_y==0){
+                                        sakk_tabla[0][0]=Ures;
+                                        sakk_tabla[1][0]=VKiraly;
+                                        sakk_tabla[2][0]=VBastya;
+                                        sakk_tabla[3][0]=Ures;
+                                      }
+                                      if(t_x==7&&t_y==0){
+                                        sakk_tabla[3][0]=Ures;
+                                        sakk_tabla[4][0]=VBastya;
+                                        sakk_tabla[5][0]=VKiraly;
+                                        sakk_tabla[6][0]=Ures;
+                                        sakk_tabla[7][0]=Ures;
+                                      }
+                                    }
+                                    else{
+                                      sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
+                                      sakk_tabla[elozox][elozoy]=Ures;
+                                      if(sakk_tabla[t_x][t_y]==VGyalog&&t_y==7){
+                                          babu_kivalszt(renderer, babuk, true);
+                                          cserel.x=t_x;
+                                          cserel.y=t_y;
+                                          babu_cserel=true;
+                                          szin_cserel=true;
+                                      }
+                                    }
 
-                    }
-                    rajzoltam = true;
-                    elozox = event.button.x/100;
-                    elozoy = event.button.y/100;
-                    if(vege){
-                      quit=true;
-                      break;
+                                    lista = Beszur(lista, sakk_tabla);
+                                    lepeget=lista;
+                                    feher_lep=false;
+                                }
+                                alap_hatter(sakk_hatter);
+                                kivalasztva=false;
+                              }
+                            }
+                            else{
+                              alap_hatter(sakk_hatter);
+                              if(!sakk_feher(sakk_tabla, lista)){
+                                if(matt_feher(sakk_tabla, lista)){
+                                  patt=true;
+                                }
+                                else{
+                                  kulonleges_lep lep_v = feher_babu_jolepes(sakk_tabla, sakk_hatter, lista, t_x, t_y);
+                                  rosal_v=lep_v.rosal;
+                                  elpassant_v=lep_v.elpassant;
+                                }
+                              }
+                              else{
+                                if(matt_feher(sakk_tabla, lista)){
+                                  feher_matt=true;
+                                }
+                                else{
+                                  feher_babu_jolepes(sakk_tabla, sakk_hatter, lista, t_x, t_y);
+                                }
+                              }
+                              kivalasztva=true;
+                            }
+                          }
+                          else{
+                            Lista_masol(sakk_tabla, lista->adat);
+                            //ha mar kattintottunk mar egy karakterre (kivalasztottuk) akkor igaz lesz
+                            if(kivalasztva){
+                              if((elozox == t_x) && (elozoy == t_y)){
+                                alap_hatter(sakk_hatter);
+                                kivalasztva=false;
+                              }
+                              else{
+                                if(sakk_hatter[t_x][t_y]==false){
+                                    if(elpassant_s){
+                                      sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
+                                      sakk_tabla[elozox][elozoy]=Ures;
+                                      sakk_tabla[t_x][elozoy]=Ures;
+                                    }
+                                    else if(rosal_s){
+                                        if(t_x==0&&t_y==7){
+                                          sakk_tabla[0][7]=Ures;
+                                          sakk_tabla[1][7]=SKiraly;
+                                          sakk_tabla[2][7]=SBastya;
+                                          sakk_tabla[3][7]=Ures;
+                                        }
+                                        if(t_x==7&&t_y==7){
+                                          sakk_tabla[3][7]=Ures;
+                                          sakk_tabla[4][7]=SBastya;
+                                          sakk_tabla[5][7]=SKiraly;
+                                          sakk_tabla[6][7]=Ures;
+                                          sakk_tabla[7][7]=Ures;
+                                        }
+                                    }
+                                    else{
+                                      sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
+                                      sakk_tabla[elozox][elozoy]=Ures;
+                                      if(sakk_tabla[t_x][t_y]==SGyalog&&t_y==0){
+                                          babu_kivalszt(renderer, babuk, false);
+                                          cserel.x=t_x;
+                                          cserel.y=t_y;
+                                          babu_cserel=true;
+                                          szin_cserel=false;
+                                      }
+                                    }
+                                    lista = Beszur(lista, sakk_tabla);
+                                    lepeget=lista;
+                                    feher_lep=true;
+                                }
+                                alap_hatter(sakk_hatter);
+                                kivalasztva=false;
+                              }
+                            }
+                            else{
+                              alap_hatter(sakk_hatter);
+                              if(!sakk_fekete(sakk_tabla, lista)){
+                                if(matt_fekete(sakk_tabla, lista)){
+                                  patt=true;
+                                }
+                                else{
+                                  kulonleges_lep lep_s =fekete_babu_jolepes(sakk_tabla, sakk_hatter, lista, t_x, t_y);
+                                  rosal_s=lep_s.rosal;
+                                  elpassant_s=lep_s.elpassant;
+                                }
+                              }
+                              else{
+                                if(matt_fekete(sakk_tabla, lista)){
+                                  fekete_matt=true;
+                                }
+                                else{
+                                  fekete_babu_jolepes(sakk_tabla, sakk_hatter, lista, t_x, t_y);
+                                }
+                              }
+                              kivalasztva=true;
+                            }
+                          }
+
+                        }
+                        rajzoltam = true;
+                        elozox = event.button.x/100;
+                        elozoy = event.button.y/100;
+                        if(feher_matt){
+                          printf("Feher matt\n");
+                        }
+                        if(fekete_matt){
+                          printf("Fekete matt\n");
+                        }
+                        if(patt){
+                          printf("Patt\n");
+                        }
+
                     }
                 }
                 break;

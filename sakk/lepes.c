@@ -46,7 +46,7 @@ bool jelol_csak_fekete(Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y)
 //A feher kiraly lepes iranyait leirja, és azt a sakk_lep et módosítva mutatja meg.
 bool feher_kiraly_lep (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y, ListaElem* ls){
     bool rosal=false;
-    if(sakk_tabla[x][y]==0){
+    if(sakk_tabla[x][y]==VKiraly){
       sakk_lep[x][y]=false;
       if(((x-1)>=0)&&((y+1)<8))       jelol_feher(sakk_tabla, sakk_lep, x-1, y+1);
       if(((x-1)>=0)&&((y-1)>=0))      jelol_feher(sakk_tabla, sakk_lep, x-1, y-1);
@@ -72,7 +72,7 @@ bool feher_kiraly_lep (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y,
 //A fekete kiraly lepes iranyait leirja, és azt a sakk_lep et módosítva mutatja meg.
 bool fekete_kiraly_lep (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y, ListaElem* ls){
     bool rosal=false;
-    if(sakk_tabla[x][y]==6){
+    if(sakk_tabla[x][y]==SKiraly){
       sakk_lep[x][y]=false;
       if(((x-1)>=0)&&((y+1)<8))       jelol_fekete(sakk_tabla, sakk_lep, x-1, y+1);
       if(((x-1)>=0)&&((y-1)>=0))      jelol_fekete(sakk_tabla, sakk_lep, x-1, y-1);
@@ -94,51 +94,30 @@ bool fekete_kiraly_lep (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y
     }
     return rosal;
 }
-
-//A feher gyalogos utes lehetosegeit irj le, és azt a sakk_lep et módosítva mutatja meg.
-bool feher_paraszt_ut (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y, ListaElem* ls){
-    if(sakk_tabla[x][y]==5){
-      if((y+1)<8){
-        jelol_csak_feher(sakk_tabla, sakk_lep, x+1, y+1);
-        jelol_csak_feher(sakk_tabla, sakk_lep, x-1, y+1);
-      }
-    }
-    return false;
-}
-//A fekete gyalogos utes lehetosegeit irj le, és azt a sakk_lep et módosítva mutatja meg.
-bool fekete_paraszt_ut (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y, ListaElem* ls){
-    if(sakk_tabla[x][y]==11){
-      if((y+1)<8){
-        jelol_csak_fekete(sakk_tabla, sakk_lep, x+1, y+1);
-        jelol_csak_fekete(sakk_tabla, sakk_lep, x-1, y+1);
-      }
-    }
-    return false;
-}
 //A feher gyalogos lepes lehetosegeit irj le, és azt a sakk_lep et módosítva mutatja meg.
 bool feher_paraszt_lep (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y, ListaElem* ls){
-    if(sakk_tabla[x][y]==5){
+    if(sakk_tabla[x][y]==VGyalog){
       sakk_lep[x][y]=false;
       if((y+1)<8){
-        if(y==1){
+        if(y==1&&sakk_tabla[x][2]==Ures&&sakk_tabla[x][3]==Ures){
             jelol_ures(sakk_tabla, sakk_lep, x, y+2);
         }
         jelol_ures(sakk_tabla, sakk_lep, x, y+1);
         jelol_csak_feher(sakk_tabla, sakk_lep, x+1, y+1);
         jelol_csak_feher(sakk_tabla, sakk_lep, x-1, y+1);
-        if(sakk_tabla[x+1][y]==11){
+        if(sakk_tabla[x+1][y]==SGyalog){
             ListaElem* lista = Elozo(ls);
             if(lista!=NULL){
-              if(lista->adat[x+1][6]==11){
+              if(lista->adat[x+1][6]==SGyalog){
                   sakk_lep[x+1][y+1]=false;
                   return true;
               }
             }
         }
-        if(sakk_tabla[x-1][y]==11){
+        if(sakk_tabla[x-1][y]==SGyalog){
             ListaElem* lista = Elozo(ls);
             if(lista!=NULL){
-              if(lista->adat[x-1][6]==11){
+              if(lista->adat[x-1][6]==SGyalog){
                   sakk_lep[x-1][y+1]=false;
                   return true;
               }
@@ -150,28 +129,28 @@ bool feher_paraszt_lep (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y
 }
 //A fekete gyalogos lepes lehetosegeit irj le, és azt a sakk_lep et módosítva mutatja meg.
 bool fekete_paraszt_lep (Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y, ListaElem* ls){
-    if(sakk_tabla[x][y]==11){
+    if(sakk_tabla[x][y]==SGyalog){
       sakk_lep[x][y]=false;
       if((y-1)>=0){
-        if(y==6){
+        if(y==6&&sakk_tabla[x][5]==Ures&&sakk_tabla[x][4]==Ures){
             jelol_ures(sakk_tabla, sakk_lep, x, y-2);
         }
         jelol_ures(sakk_tabla, sakk_lep, x, y-1);
         jelol_csak_fekete(sakk_tabla, sakk_lep, x+1, y-1);
         jelol_csak_fekete(sakk_tabla, sakk_lep, x-1, y-1);
-        if(sakk_tabla[x+1][y]==5){
+        if(sakk_tabla[x+1][y]==VGyalog){
             ListaElem* lista = Elozo(ls);
             if(lista!=NULL){
-              if(lista->adat[x+1][1]==5){
+              if(lista->adat[x+1][1]==VGyalog){
                   sakk_lep[x+1][y-1]=false;
                   return true;
               }
             }
         }
-        if(sakk_tabla[x-1][y]==5){
+        if(sakk_tabla[x-1][y]==VGyalog){
             ListaElem* lista = Elozo(ls);
             if(lista!=NULL){
-              if(lista->adat[x-1][1]==5){
+              if(lista->adat[x-1][1]==VGyalog){
                   sakk_lep[x-1][y-1]=false;
                   return true;
               }
@@ -708,37 +687,27 @@ void fekete_huszar_lep(Babu sakk_tabla[8][8], bool sakk_lep[8][8], int x, int y)
 }
 
 //feher utesi mezo
-void feher_utes_mezo(Babu sakk_tabla[8][8], bool sakk_lep[8][8]){
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 8; j++) {
+kulonleges_lep feher_utes_mezo(Babu sakk_tabla[8][8], bool sakk_lep[8][8], ListaElem* lista, int i, int j){
+      kulonleges_lep lep;
       feher_huszar_lep(sakk_tabla, sakk_lep, i, j);
       feher_kiralyno_lep(sakk_tabla, sakk_lep, i, j);
       feher_futo_lep(sakk_tabla, sakk_lep, i, j);
       feher_bastya_lep(sakk_tabla, sakk_lep, i, j);
-      feher_kiraly_lep(sakk_tabla, sakk_lep, i, j, NULL);
-      feher_paraszt_lep(sakk_tabla, sakk_lep, i, j, NULL);
-    }
-  }
+      lep.rosal = feher_kiraly_lep(sakk_tabla, sakk_lep, i, j, lista);
+      lep.elpassant = feher_paraszt_lep(sakk_tabla, sakk_lep, i, j, lista);
 }
 
 //fekete utesi mezo
-void fekete_utes_mezo(Babu sakk_tabla[8][8], bool sakk_lep[8][8]){
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 8; j++) {
+kulonleges_lep fekete_utes_mezo(Babu sakk_tabla[8][8], bool sakk_lep[8][8], ListaElem* lista, int i, int j){
+      kulonleges_lep lep;
       fekete_huszar_lep(sakk_tabla, sakk_lep, i, j);
       fekete_kiralyno_lep(sakk_tabla, sakk_lep, i, j);
       fekete_futo_lep(sakk_tabla, sakk_lep, i, j);
       fekete_bastya_lep(sakk_tabla, sakk_lep, i, j);
-      fekete_kiraly_lep(sakk_tabla, sakk_lep, i, j, NULL);
-      fekete_paraszt_lep(sakk_tabla, sakk_lep, i, j, NULL);
-    }
-  }
+      fekete_kiraly_lep(sakk_tabla, sakk_lep, i, j, lista);
+      lep.rosal = fekete_kiraly_lep(sakk_tabla, sakk_lep, i, j, lista);
+      lep.elpassant = fekete_paraszt_lep(sakk_tabla, sakk_lep, i, j, lista);
 }
-
-typedef struct{
-  int x;
-  int y;
-} Hely;
 
 //feher kiraly lepesi teruletei
 Hely feher_kiraly_terulete(Babu sakk_tabla[8][8]){
@@ -770,24 +739,15 @@ Hely fekete_kiraly_terulete(Babu sakk_tabla[8][8]){
   return hol;
 }
 
-//osszehasonlit es a jo lepeseket
-void kiraly_jolepes(bool kiraly_lep[8][8], bool sakk_lep[8][8]){
+bool sakk_feher(Babu sakk_tabla[8][8], ListaElem* lista){
+  bool sakk_lep[8][8];
+  alap_hatter(sakk_lep);
+  Hely hol = feher_kiraly_terulete(sakk_tabla);
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
-      if(kiraly_lep[i][j]==false&&sakk_lep[i][j]==true){
-        kiraly_lep[i][j]=false;
-      }
-      else{
-        kiraly_lep[i][j]=true;
-      }
+      fekete_utes_mezo(sakk_tabla, sakk_lep, lista, i ,j);
     }
   }
-}
-
-//sakk
-bool sakk_feher(Babu sakk_tabla[8][8], bool sakk_lep[8][8]){
-  fekete_utes_mezo(sakk_tabla, sakk_lep);
-  Hely hol = feher_kiraly_terulete(sakk_tabla);
   if(sakk_lep[hol.x][hol.y]==false){
     alap_hatter(sakk_lep);
     return true;
@@ -797,9 +757,15 @@ bool sakk_feher(Babu sakk_tabla[8][8], bool sakk_lep[8][8]){
 }
 
 //sakk
-bool sakk_fekete(Babu sakk_tabla[8][8], bool sakk_lep[8][8]){
-  feher_utes_mezo(sakk_tabla, sakk_lep);
+bool sakk_fekete(Babu sakk_tabla[8][8], ListaElem* lista){
+  bool sakk_lep[8][8];
+  alap_hatter(sakk_lep);
   Hely hol = fekete_kiraly_terulete(sakk_tabla);
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      feher_utes_mezo(sakk_tabla, sakk_lep, lista, i ,j);
+    }
+  }
   if(sakk_lep[hol.x][hol.y]==false){
     alap_hatter(sakk_lep);
     return true;
@@ -816,94 +782,118 @@ void hatter_masol(bool adat[8][8], bool masolando[8][8]){
     }
 }
 
+bool hatter_metszet(bool adat[8][8], bool masolando[8][8]){
+    for(int x = 0; x < 8; x++){
+      for(int y = 0; y < 8; y++){
+        if(adat[x][y]==masolando[x][y]){
+          return false;
+        }
+      }
+    }
+    return true;
+}
+
 //osszes babu mento lepesit irja ki a jo lepesbe
-void feher_babu_jolepes(Babu sakk_tabla[8][8], bool jolepes[8][8], ListaElem* lista, int i, int j){
+kulonleges_lep feher_babu_jolepes(Babu sakk_tabla[8][8], bool jolepes[8][8], ListaElem* lista, int i, int j){
+        bool sakk=sakk_feher(sakk_tabla, NULL);
+        kulonleges_lep vissza_ad;
+        vissza_ad.elpassant=false;
+        vissza_ad.rosal=false;
         bool sakk_lep[8][8];
         alap_hatter(jolepes);
         alap_hatter(sakk_lep);
-        feher_huszar_lep(sakk_tabla, sakk_lep, i, j);
-        feher_kiralyno_lep(sakk_tabla, sakk_lep, i, j);
-        feher_futo_lep(sakk_tabla, sakk_lep, i, j);
-        feher_bastya_lep(sakk_tabla, sakk_lep, i, j);
-        feher_kiraly_lep(sakk_tabla, sakk_lep, i, j, lista);
-        bool elpassant_v=feher_paraszt_lep(sakk_tabla, sakk_lep, i, j, lista);
+        kulonleges_lep lep=feher_utes_mezo(sakk_tabla, sakk_lep, lista, i , j);
         int elozox=i;
         int elozoy=j;
         for (int t_x = 0; t_x < 8; t_x++) {
           for (int t_y = 0; t_y < 8; t_y++) {
             if(sakk_lep[t_x][t_y]==false){
-                if (elpassant_v){
+                if (lep.elpassant){
+                  vissza_ad.elpassant=true;
                   sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
                   sakk_tabla[elozox][elozoy]=Ures;
                   sakk_tabla[t_x][elozoy]=Ures;
+                }
+                else if(sakk&&lep.rosal&&sakk_lep[3][7]&&sakk_lep[2][7]&&sakk_lep[1][7]){
+                  vissza_ad.rosal=true;
+                }
+                else if(sakk&&lep.rosal&&sakk_lep[3][7]&&sakk_lep[4][7]&&sakk_lep[5][7]){
+                  vissza_ad.rosal=true;
                 }
                 else{
                   sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
                   sakk_tabla[elozox][elozoy]=Ures;
                 }
-                bool sakk_hatter[8][8];
-                hatter_masol(sakk_hatter, sakk_lep);
 
-                if(sakk_feher(sakk_tabla, sakk_hatter)==false){
-                    jolepes[t_x][t_y]=false;
+                if(!sakk_feher(sakk_tabla, NULL)){
+                  jolepes[t_x][t_y]=false;
                 }
+
+                hatter_metszet(jolepes, sakk_lep);
 
                 Lista_masol(sakk_tabla, lista->adat);
             }
           }
         }
+        return vissza_ad;
 }
 
 
 //osszes babu mento lepesit irja ki a jo lepesbe
-void fekete_babu_jolepes(Babu sakk_tabla[8][8], bool jolepes[8][8], ListaElem* lista, int i, int j){
+kulonleges_lep fekete_babu_jolepes(Babu sakk_tabla[8][8], bool jolepes[8][8], ListaElem* lista, int i, int j){
+        bool sakk=sakk_fekete(sakk_tabla, NULL);
+        kulonleges_lep vissza_ad;
+        vissza_ad.elpassant=false;
+        vissza_ad.rosal=false;
+
         bool sakk_lep[8][8];
         alap_hatter(jolepes);
         alap_hatter(sakk_lep);
-        fekete_huszar_lep(sakk_tabla, sakk_lep, i, j);
-        fekete_kiralyno_lep(sakk_tabla, sakk_lep, i, j);
-        fekete_futo_lep(sakk_tabla, sakk_lep, i, j);
-        fekete_bastya_lep(sakk_tabla, sakk_lep, i, j);
-        fekete_kiraly_lep(sakk_tabla, sakk_lep, i, j, lista);
-        bool elpassant_s=feher_paraszt_lep(sakk_tabla, sakk_lep, i, j, lista);
+        kulonleges_lep lep=fekete_utes_mezo(sakk_tabla, sakk_lep, lista, i ,j);
         int elozox=i;
         int elozoy=j;
         for (int t_x = 0; t_x < 8; t_x++) {
           for (int t_y = 0; t_y < 8; t_y++) {
             if(sakk_lep[t_x][t_y]==false){
-                if (elpassant_s){
+                if (lep.elpassant){
+                  vissza_ad.elpassant=false;
                   sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
                   sakk_tabla[elozox][elozoy]=Ures;
                   sakk_tabla[t_x][elozoy]=Ures;
+                }
+                else if((sakk&&lep.rosal&&sakk_lep[3][7]&&sakk_lep[2][7]&&sakk_lep[1][7])||(sakk&&lep.rosal&&sakk_lep[3][7]&&sakk_lep[4][7]&&sakk_lep[5][7])){
+                  vissza_ad.rosal=true;
+                  vissza_ad.elpassant=false;
+
                 }
                 else{
                   sakk_tabla[t_x][t_y]=sakk_tabla[elozox][elozoy];
                   sakk_tabla[elozox][elozoy]=Ures;
                 }
-                bool sakk_hatter[8][8];
-                hatter_masol(sakk_hatter, sakk_lep);
 
-                if(sakk_fekete(sakk_tabla, sakk_hatter)==false){
-                    jolepes[t_x][t_y]=false;
+                if(!sakk_fekete(sakk_tabla, NULL)){
+                  jolepes[t_x][t_y]=false;
                 }
 
+                hatter_metszet(jolepes, sakk_lep);
                 Lista_masol(sakk_tabla, lista->adat);
             }
           }
         }
+        return vissza_ad;
 }
 
 bool matt_fekete(Babu sakk_tabla[8][8], ListaElem* lista){
         ListaElem* ls = lista;
         bool jolepes[8][8];
-        alap_hatter(jolepes);
-        for (int t_x = 0; t_x < 8; t_x++) {
-          for (int t_y = 0; t_y < 8; t_y++) {
-            fekete_babu_jolepes(sakk_tabla, jolepes, ls, t_y, t_y);
-            for (int x = 0; x < 8; x++) {
-              for (int y = 0; y < 8; y++) {
-                if (jolepes[x][y]==false)
+        for(int i = 0; i < 8; i++) {
+          for(int j = 0; j < 8; j++) {
+            feher_babu_jolepes(sakk_tabla, jolepes, ls, i, j);
+            for(int x = 0; x < 8; x++) {
+              for(int y = 0; y < 8; y++) {
+                if(!jolepes[x][y]){
                   return false;
+                }
               }
             }
           }
@@ -915,17 +905,17 @@ bool matt_fekete(Babu sakk_tabla[8][8], ListaElem* lista){
 bool matt_feher(Babu sakk_tabla[8][8], ListaElem* lista){
         ListaElem* ls = lista;
         bool jolepes[8][8];
-        alap_hatter(jolepes);
-        for (int t_x = 0; t_x < 8; t_x++) {
-          for (int t_y = 0; t_y < 8; t_y++) {
-            feher_babu_jolepes(sakk_tabla, jolepes, ls, t_y, t_y);
-            for (int x = 0; x < 8; x++) {
-              for (int y = 0; y < 8; y++) {
-                if (jolepes[x][y]==false)
+        for(int i = 0; i < 8; i++) {
+          for(int j = 0; j < 8; j++) {
+            feher_babu_jolepes(sakk_tabla, jolepes, ls, i, j);
+            for(int x = 0; x < 8; x++) {
+              for(int y = 0; y < 8; y++) {
+                if(!jolepes[x][y]){
                   return false;
+                }
               }
             }
           }
         }
         return true;
-}
+  }

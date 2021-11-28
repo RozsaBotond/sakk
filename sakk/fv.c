@@ -93,6 +93,20 @@ SDL_Texture* kep_betolt(SDL_Renderer *renderer, char* path){
     }
     return tmp;
 }
+
+void babu_kivalszt(SDL_Renderer *renderer, SDL_Texture *babuk, bool feher){
+    SDL_Rect src;
+    SDL_Rect dest = { 800, 0, 200, 33 };
+    if(feher){
+      SDL_Rect src = { 100, 0, 600, 100 };
+    }
+    else{
+      SDL_Rect src = { 100, 100, 600, 200 };
+    }
+    SDL_RenderCopy(renderer, babuk, &src, &dest);
+
+}
+
 /* kirajzolja a menut*/
 void menu_rajzol(SDL_Renderer *renderer, SDL_Texture *menu_hatter, SDL_Texture *also_gombok, SDL_Texture *mentes_gombok) {
     /* a forras kepbol ezekrol a koordinatakrol, ilyen meretu reszletet masolunk. */
@@ -111,6 +125,7 @@ void menu_rajzol(SDL_Renderer *renderer, SDL_Texture *menu_hatter, SDL_Texture *
     /* a cel kepre, ezekre a koordinatakra masoljuk */
     SDL_Rect dest3 = { 800, 769, 200, 27 };
     SDL_RenderCopy(renderer, mentes_gombok, &src3, &dest3);
+
 }
 
 /* kirajzolja a tablat*/

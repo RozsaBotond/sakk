@@ -26,6 +26,7 @@ void alap_hatter(bool sakk_hatter[8][8]);
 void alap_tabla(Babu sakk_tabla[8][8]);
 void babu_rajzol(SDL_Renderer *renderer, SDL_Texture *babuk, Babu melyik, int x, int y);
 void hatter_rajzol(SDL_Renderer *renderer, SDL_Texture *hatter, bool sakk_hatter[8][8] , int x, int y);
+void babu_kivalszt(SDL_Renderer *renderer, SDL_Texture *babuk, bool feher);
 SDL_Texture* kep_betolt(SDL_Renderer *renderer, char* path);
 void tabla_rajzol(SDL_Renderer *renderer, SDL_Texture *tabla);
 void sdl_init(int szeles, int magas, SDL_Window **pwindow, SDL_Renderer **prenderer);

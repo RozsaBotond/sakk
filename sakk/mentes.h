@@ -20,7 +20,9 @@ ListaElem* Keres(ListaElem* ls, Babu adat[8][8]);
 bool Babu_elmozdult(ListaElem* ls, Babu adat[8][8], int x, int y);
 bool Lista_hasonlit(Babu adat[8][8], Babu masolando[8][8]);
 void Lista_masol(Babu adat[8][8], Babu masolando[8][8]);
+ListaElem* Beolvas(ListaElem* lista);
 ListaElem* Elozo(ListaElem* ls);
+ListaElem* Kovetkez(ListaElem* ls);
 void Mentes(ListaElem* ls);
 
 #endif
