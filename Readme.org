@@ -3,6 +3,6 @@
 Szimpla grafikus sakk alkalmazás.
 
 ** Futtatás
-#+begin_src c
+#+begin_src bash
     gcc main.c fv.c lepes.c mentes.c -o out `sdl2-config --cflags --libs` -lSDL2_gfx -lSDL2_ttf -lSDL2_image -lSDL2_mixer
 #+end_src
