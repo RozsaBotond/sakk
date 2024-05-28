@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
     SDL_Window *window;
     SDL_Renderer *renderer;
     sdl_init(X+200, Y, &window, &renderer);
+    SDL_SetWindowTitle(window, "Sakk");
 
     /* kep betoltese */
     SDL_Texture *babuk = kep_betolt(renderer, "img/babuk.png");
